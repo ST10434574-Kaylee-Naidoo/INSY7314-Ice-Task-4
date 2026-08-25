@@ -1,7 +1,9 @@
+require('dotenv').config();
+
 const express = require('express'); //imports package 
 const app = express(); //creates the express application
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT||3000;
 app.use(express.json()); //allows the API to read JSON request bodies
   
 app.get('/', (req, res) => { 
@@ -17,6 +19,6 @@ app.post('/message', (req, res) => {
   res.json({ received: message }); 
 }); 
   
-app.listen(3000, () => { 
-  console.log('Server running on port ${PORT}'); 
-});
+app.listen(PORT, () => { 
+  console.log(`Running on port ${PORT}`); 
+}); 
