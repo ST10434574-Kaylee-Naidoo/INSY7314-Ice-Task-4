@@ -1,9 +1,14 @@
 require('dotenv').config();
 
-const express = require('express'); //imports package 
+const express = require('express'); //imports package
+const connectDB=require('./config/db'); 
+
 const app = express(); //creates the express application
 
 const PORT = process.env.PORT||3000;
+
+connectDB();
+
 app.use(express.json()); //allows the API to read JSON request bodies
   
 app.get('/', (req, res) => { 
