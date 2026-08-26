@@ -18,9 +18,9 @@ const router = express.Router();
 router.get('/me', protect, getMyProfile);
 router.put('/me', protect, updateMyProfile);
 router.get('/', protect, authorizeRoles('admin'),getAllUsers);
-router.get('/:userId', protect, authorizeRoles('admin'),deleteUser);
-router.get('/:userId/promote', protect, authorizeRoles('admin'),promoteUser);
-router.get('/:userId/demote', protect, authorizeRoles('admin'),demoteUser);
+router.delete('/:userId', protect, authorizeRoles('admin'),deleteUser);
+router.put('/:userId/promote', protect, authorizeRoles('admin'),promoteUser);
+router.put('/:userId/demote', protect, authorizeRoles('admin'),demoteUser);
 
 
 module.exports = router;

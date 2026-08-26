@@ -6,7 +6,7 @@ const getPhotos= async(req,res)=>
 {
     try
     {
-        const photos = await Photos.find()
+        const photos = await Photo.find()
         .populate('owner', 'username email');
 
         return res.status(200).json({
@@ -16,6 +16,7 @@ const getPhotos= async(req,res)=>
     }
     catch(error)
     {
+        console.log(error);
         return res.status(500).json({
             error: 'Unable to get photos '
         })
@@ -27,7 +28,7 @@ const getAllPhotos= async(req,res)=>
 {
     try
     {
-        const photos = await Photos.find()
+        const photos = await Photo.find()
         .populate('owner', 'username email role');
 
         return res.status(200).json({
@@ -48,6 +49,7 @@ const uploadPhoto= async (req, res)=>
 {
     try
     {
+        console.log('1. upload route reached');
         const {title, description}= req.body;
 
         if(!title){
@@ -62,7 +64,13 @@ const uploadPhoto= async (req, res)=>
             });
         }
 
+        console.log('2. File received:', req.file.originalname);
+        console.log('3. File size:', req.file.size);
+
         const uploadResult = await streamUpload(req.file.buffer);
+
+        console.log('4. Cloudinary upload complete');
+        console.log('5. Cloudinary URL:', uploadResult.secure_url);
 
         const photo = await Photo.create({
             title,
@@ -71,9 +79,17 @@ const uploadPhoto= async (req, res)=>
             cloudinaryPublicId: uploadResult.public_id,
             owner: req.user.id
         });
+
+        console.log('6. Photo saved to MongoDB');
+
+        return res.status(201).json({
+            message:'Photo uploaded successfully',
+            photo
+        });
     }
     catch
     {
+        console.log('UPLOAD ERROR:', error);
         return res.status(500).json({
             error:'unable to upload photo'
         });
