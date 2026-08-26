@@ -4,6 +4,7 @@ const express = require('express'); //imports package
 const connectDB=require('./config/db'); 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const photoRoutes = require('./routes/photoRoutes');
 
 const app = express(); //creates the express application
 
@@ -15,6 +16,7 @@ app.use(express.json()); //allows the API to read JSON request bodies
   
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/photos', photoRoutes);
 
 app.get('/', (req, res) => { 
   res.send('PhotoStore API is running'); 

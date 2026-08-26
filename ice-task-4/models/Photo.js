@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'); //imports mongoose
   
-const userSchema = new mongoose.Schema(  //sets rules for how a user should be stored in MongoDB
+const photoSchema = new mongoose.Schema(  //sets rules for how a user should be stored in MongoDB
   { 
     title: 
     { 
@@ -12,8 +12,8 @@ const userSchema = new mongoose.Schema(  //sets rules for how a user should be s
     description: 
     { 
       type: String, 
-      required: [true, 'Email is required'], 
       trim: true, 
+      default: ''
     }, 
 
     imageUrl: 
