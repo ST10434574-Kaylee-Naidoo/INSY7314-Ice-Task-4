@@ -4,7 +4,8 @@ const
 {
     getPhotos,
     getAllPhotos,
-    uploadPhoto
+    uploadPhoto,
+    updatePhoto
 } = require('../controllers/photoController');
 
 const
@@ -20,5 +21,6 @@ const router = express.Router();
 router.get('/', protect, getPhotos);
 router.get('/all', protect, authorizeRoles('admin'), getAllPhotos);
 router.post('/', protect, upload.single('image'), uploadPhoto);
+router.post('/:photoId', protect, upload.single('image'), updatePhoto);
 
 module.exports=router;

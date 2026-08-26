@@ -1,5 +1,5 @@
 const Photo = require('../models/Photo');
-const {streamUpload} = require('../util/cloudinary');
+const {streamUpload, deleteFromCloudinary} = require('../util/cloudinary');
 
 //function to get photos
 const getPhotos= async(req,res)=>
@@ -80,10 +80,76 @@ const uploadPhoto= async (req, res)=>
     }
 };
 
+
+//function to update image 
+const updatePhoto=async (req, res)=>
+{
+    try
+    {
+        const {title, description}=req.body;
+
+        const photo= await Photo.findById(req.params.photoId);
+
+        if(!photo){
+            return res.status(400).json({
+                error:'photo not found'
+            });
+        }
+
+        const isOwner =photo.owner.toString()===req.user.id.toString();
+        const isAdmin =req.user.role ==='admin';
+
+        if(!isOwner && !isAdmin)
+        {
+            return res.status(403).json({
+                error: 'updating photo not allowed for this user'
+            })
+        }
+
+        if(title){
+            photo.title=title;
+        }
+
+        if(description !== undefined){
+            photo.description=description;
+        }
+
+        if(req.file)
+        {
+            const oldPublicId = photo.cloudinaryPublicId;
+            const uploadResult=await streamUpload(req.file.buffer);
+
+            photo.imageUrl = uploadResult.secure_url;
+            photo.cloudinaryPublicId = uploadResult.public_id;
+
+            await photo.save();
+            await deleteFromCloudinary(oldPublicId);
+
+            return res.status(200).json({
+                message: 'Photo updated ',
+                photo
+            });
+        }
+
+        await photo.save();
+        return res.status(200).json({
+            message:"Photo updated",
+            photo
+        });
+    }
+    catch(error)
+    {
+        return res.status(200).json({
+            error: 'unable to update photo'
+        });
+    }
+};
+
 module.exports=
 {
     getPhotos,
     getAllPhotos,
-    uploadPhoto
+    uploadPhoto,
+    updatePhoto 
 };
 
