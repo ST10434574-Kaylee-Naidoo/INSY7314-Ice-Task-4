@@ -1,0 +1,897 @@
+{
+  "info": {
+    "_postman_id": "bf5b9112-ae20-49e4-a290-47831b751354",
+    "name": "PhotoStore API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56655407"
+  },
+  "item": [
+    {
+      "name": "Signup User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"JWT token is returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.token).to.exist;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"User is returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response.user).to.have.property(\"_id\");\r",
+              "    pm.expect(response.user).to.have.property(\"username\");\r",
+              "    pm.expect(response.user).to.have.property(\"email\");\r",
+              "    pm.expect(response.user).to.have.property(\"role\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"New user has default user role\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.user.role).to.eql(\"user\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Password information is not exposed\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response.user).to.not.have.property(\"password\");\r",
+              "    pm.expect(response.user).to.not.have.property(\"passwordHash\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"TestUser2\",\r\n  \"email\": \"testuser2@example.com\",\r\n  \"password\": \"Password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/auth/signup",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "signup"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"JWT token is returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.token).to.exist;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"User details are returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response.user).to.have.property(\"id\");\r",
+              "    pm.expect(response.user).to.have.property(\"username\");\r",
+              "    pm.expect(response.user).to.have.property(\"email\");\r",
+              "    pm.expect(response.user).to.have.property(\"role\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Password information is not exposed\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response.user).to.not.have.property(\"password\");\r",
+              "    pm.expect(response.user).to.not.have.property(\"passwordHash\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"testuser2@example.com\",\r\n  \"password\": \"Password123\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET my profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"User profile is returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response).to.have.property(\"_id\");\r",
+              "    pm.expect(response).to.have.property(\"username\");\r",
+              "    pm.expect(response).to.have.property(\"email\");\r",
+              "    pm.expect(response).to.have.property(\"role\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Timestamps are returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response).to.have.property(\"createdAt\");\r",
+              "    pm.expect(response).to.have.property(\"updatedAt\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Password information is not exposed\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response).to.not.have.property(\"password\");\r",
+              "    pm.expect(response).to.not.have.property(\"passwordHash\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzg3NzYzNjExLCJleHAiOjE3ODc3NjcyMTF9.BMNHqioT2Fbmk9p15T647eqLugzrHxj8YQ-Yq22iINw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update My Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Profile updated successfully\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.message).to.eql(\"Profile updated successfully\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Updated user details are returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response.user).to.have.property(\"_id\");\r",
+              "    pm.expect(response.user).to.have.property(\"username\");\r",
+              "    pm.expect(response.user).to.have.property(\"email\");\r",
+              "    pm.expect(response.user).to.have.property(\"role\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Username was updated\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.user.username).to.eql(\"TestUserUpdated\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Email was updated\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.user.email).to.eql(\"testuserupdated@example.com\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Password information is not exposed\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response.user).to.not.have.property(\"password\");\r",
+              "    pm.expect(response.user).to.not.have.property(\"passwordHash\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzg3NzYzNjExLCJleHAiOjE3ODc3NjcyMTF9.BMNHqioT2Fbmk9p15T647eqLugzrHxj8YQ-Yq22iINw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"TestUserUpdated\",\r\n  \"email\": \"testuserupdated@example.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all users - Admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Users are returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response).to.have.property(\"count\");\r",
+              "    pm.expect(response).to.have.property(\"users\");\r",
+              "    pm.expect(response.users).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Password hashes are not exposed\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    response.users.forEach(function (user) {\r",
+              "        pm.expect(user).to.not.have.property(\"password\");\r",
+              "        pm.expect(user).to.not.have.property(\"passwordHash\");\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4Nzc2NDc0NywiZXhwIjoxNzg3NzY4MzQ3fQ.a0DgBlhRQBPR2bftHxuEIeYFUvFKylQmZca93zo-Hwk",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Promote user - Admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"User was promoted successfully\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.message).to.eql(\"User promoted to admin\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"User role is now admin\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.user.role).to.eql(\"admin\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Password information is not exposed\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.user).to.not.have.property(\"password\");\r",
+              "    pm.expect(response.user).to.not.have.property(\"passwordHash\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4Nzc2NDc0NywiZXhwIjoxNzg3NzY4MzQ3fQ.a0DgBlhRQBPR2bftHxuEIeYFUvFKylQmZca93zo-Hwk",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/6a8e20da5c4dbbd612992ec8/promote",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "6a8e20da5c4dbbd612992ec8",
+            "promote"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Demote user - Admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"User was demoted successfully\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.message).to.eql(\"User demoted to user\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"User role is now user\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.user.role).to.eql(\"user\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Password information is not exposed\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.user).to.not.have.property(\"password\");\r",
+              "    pm.expect(response.user).to.not.have.property(\"passwordHash\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4Nzc2NDc0NywiZXhwIjoxNzg3NzY4MzQ3fQ.a0DgBlhRQBPR2bftHxuEIeYFUvFKylQmZca93zo-Hwk",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/6a8e20da5c4dbbd612992ec8/demote",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "6a8e20da5c4dbbd612992ec8",
+            "demote"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete User - Admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"User was deleted successfully\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.message).to.eql(\"User deleted successfully\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4Nzc2NDc0NywiZXhwIjoxNzg3NzY4MzQ3fQ.a0DgBlhRQBPR2bftHxuEIeYFUvFKylQmZca93zo-Hwk",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/6a8e20075c4dbbd612992ec7",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "6a8e20075c4dbbd612992ec7"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get photo gallery",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Photos are returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response).to.have.property(\"count\");\r",
+              "    pm.expect(response).to.have.property(\"photos\");\r",
+              "    pm.expect(response.photos).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Each photo contains required gallery fields\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    response.photos.forEach(function (photo) {\r",
+              "        pm.expect(photo).to.have.property(\"_id\");\r",
+              "        pm.expect(photo).to.have.property(\"title\");\r",
+              "        pm.expect(photo).to.have.property(\"description\");\r",
+              "        pm.expect(photo).to.have.property(\"imageUrl\");\r",
+              "        pm.expect(photo).to.have.property(\"owner\");\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4Nzc2NDc0NywiZXhwIjoxNzg3NzY4MzQ3fQ.a0DgBlhRQBPR2bftHxuEIeYFUvFKylQmZca93zo-Hwk",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/photos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "photos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all photos - Admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"All photos are returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response).to.have.property(\"count\");\r",
+              "    pm.expect(response).to.have.property(\"photos\");\r",
+              "    pm.expect(response.photos).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Owner information is included\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    response.photos.forEach(function (photo) {\r",
+              "        pm.expect(photo).to.have.property(\"owner\");\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4Nzc2NDc0NywiZXhwIjoxNzg3NzY4MzQ3fQ.a0DgBlhRQBPR2bftHxuEIeYFUvFKylQmZca93zo-Hwk",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/photos/all",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "photos",
+            "all"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Upload Photo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Photo was uploaded successfully\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.message).to.eql(\"Photo uploaded successfully\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Photo contains required fields\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response.photo).to.have.property(\"_id\");\r",
+              "    pm.expect(response.photo).to.have.property(\"title\");\r",
+              "    pm.expect(response.photo).to.have.property(\"description\");\r",
+              "    pm.expect(response.photo).to.have.property(\"imageUrl\");\r",
+              "    pm.expect(response.photo).to.have.property(\"cloudinaryPublicId\");\r",
+              "    pm.expect(response.photo).to.have.property(\"owner\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Cloudinary image URL is returned\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response.photo.imageUrl).to.be.a(\"string\");\r",
+              "    pm.expect(response.photo.imageUrl).to.include(\"cloudinary.com\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4Nzc2NDc0NywiZXhwIjoxNzg3NzY4MzQ3fQ.a0DgBlhRQBPR2bftHxuEIeYFUvFKylQmZca93zo-Hwk",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "Sunset",
+              "type": "text",
+              "id": 0
+            },
+            {
+              "key": "description",
+              "value": "photo taken on a walk",
+              "type": "text",
+              "id": 1
+            },
+            {
+              "key": "image",
+              "type": "file",
+              "id": 2,
+              "fileUploadError": "",
+              "src": [
+                "c:\\Users\\emeris\\Downloads\\sunset.jpg"
+              ]
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/photos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "photos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Photo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Photo updated successfully\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.message).to.eql(\"Photo updated successfully\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Title was updated\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.photo.title).to.eql(\"Updated Mountain View\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Description was updated\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.photo.description)\r",
+              "        .to.eql(\"This photograph has been updated.\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Photo still contains required fields\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "\r",
+              "    pm.expect(response.photo).to.have.property(\"_id\");\r",
+              "    pm.expect(response.photo).to.have.property(\"imageUrl\");\r",
+              "    pm.expect(response.photo).to.have.property(\"cloudinaryPublicId\");\r",
+              "    pm.expect(response.photo).to.have.property(\"owner\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4Nzc2NDc0NywiZXhwIjoxNzg3NzY4MzQ3fQ.a0DgBlhRQBPR2bftHxuEIeYFUvFKylQmZca93zo-Hwk",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "sunset updated",
+              "type": "text",
+              "id": 0
+            },
+            {
+              "key": "description",
+              "value": "photo updated",
+              "type": "text",
+              "id": 1
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/photos/6a8f2920b6105bc118a3a63a",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "photos",
+            "6a8f2920b6105bc118a3a63a"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Photo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Photo deleted successfully\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.message).to.eql(\"Photo deleted successfully\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhOGYxN2I5Y2VlZjBlZmI0ODhjNzI0ZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4Nzc2NDc0NywiZXhwIjoxNzg3NzY4MzQ3fQ.a0DgBlhRQBPR2bftHxuEIeYFUvFKylQmZca93zo-Hwk",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/photos/6a8f2920b6105bc118a3a63a",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "photos",
+            "6a8f2920b6105bc118a3a63a"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
