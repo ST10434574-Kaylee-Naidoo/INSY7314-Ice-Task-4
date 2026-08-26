@@ -1,6 +1,8 @@
 const User = require('../models/User');
 
-const getMyProfile =async (req, res)=>{
+//function to get profile
+const getMyProfile =async (req, res)=>
+{
     try
     {
         const user= await User.findById(req.user.id);
@@ -29,7 +31,10 @@ const getMyProfile =async (req, res)=>{
 };
 
 
-const updateMyProfile = async (req, res) => {
+//function to update profile 
+
+const updateMyProfile = async (req, res) => 
+{
     try
     {
         const { username, email } = req.body;
@@ -83,8 +88,141 @@ const updateMyProfile = async (req, res) => {
         });
     }
 }
+
+//function to get all users 
+const getAllUsers = async (req, res )=> 
+{
+    try
+    {
+        const users = await User.find();
+
+        return res.status(200).json({
+            count: users.length,
+            users
+        });
+    }
+    catch
+    {
+         return res.status(500).json({
+            error: 'Unable to get users'
+        });
+    }
+};
+
+//function to promote user to admin
+
+const promoteUser = async( req, res)=>
+{
+    try
+    {
+        const user = await User.findById(req.params.userId);
+
+        if(!user){
+            return res.status(404).json({
+            error: 'User not found'
+        });
+    }
+        
+        user.role='admin';
+
+        await user.save();
+
+        return res.status(200).json({
+            message:'User has been promoted to admin',
+            user:
+            {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            }
+        });
+         
+    }
+    catch(error)
+    {
+        return res.status(500).json({
+            error: 'Unable to promote user'
+        });
+    }
+
+};
+
+
+//function to demote user 
+const demoteUser = async( req, res)=>
+{
+    try
+    {
+        const user = await User.findById(req.params.userId);
+
+        if(!user){
+            return res.status(404).json({
+            error: 'User not found'
+        });
+    }
+        
+        user.role='user';
+
+        await user.save();
+
+        return res.status(200).json({
+            message:'User has been demoted',
+            user:
+            {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            }
+        });
+         
+    }
+    catch(error)
+    {
+        return res.status(500).json({
+            error: 'Unable to demote user'
+        });
+    }
+
+};
+
+//function to delete user 
+const deleteUser = async (req, res) =>
+{
+    try
+    {
+        const user = await User.findById(req.params.userId);
+
+        if(!user){
+            return res.status(404).json({
+            error: 'User not found'
+        });
+    }
+        
+
+        await user.deleteOne();
+
+        return res.status(200).json({
+            message:'User has been deleted'
+        });
+         
+    }
+    catch(error)
+    {
+        return res.status(500).json({
+            error: 'Unable to delete user'
+        });
+    }
+
+}
+
 module.exports=
 {
     getMyProfile,
-    updateMyProfile
+    updateMyProfile,
+    getAllUsers,
+    promoteUser,
+    demoteUser,
+    deleteUser
 }; 
