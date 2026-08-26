@@ -145,11 +145,53 @@ const updatePhoto=async (req, res)=>
     }
 };
 
+
+//function to delete photos
+const deletePhoto= async (req,res)=>
+{
+    try
+    {
+        const photo = await Photo.findById(req.params.photoId);
+
+        if(!photo){
+            return res.status(404).json({
+                error: 'Photo not found'
+            });
+        }
+
+        const isOwner =photo.owner.toString()===req.user.id.toString();
+        const isAdmin =req.user.role ==='admin';
+
+        if(!isOwner && !isAdmin)
+        {
+            return res.status(403).json({
+                error: 'deletion of photo not allowed for this user'
+            })
+        }
+
+        await deleteFromCloudinary(photo.cloudinaryPublicId);
+
+        await photo.deleteOne();
+
+        return res.status(200).json({
+            message:'Photo deleted successfully'
+        });
+
+    }
+    catch(error)
+    {
+        return res.status(500).json({
+            error: 'Unable to delete photo'
+        });
+    }
+};
+
 module.exports=
 {
     getPhotos,
     getAllPhotos,
     uploadPhoto,
-    updatePhoto 
+    updatePhoto,
+    deletePhoto
 };
 
